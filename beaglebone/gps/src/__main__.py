@@ -2,6 +2,7 @@ import serial
 # import string
 import lcm
 from rover_msgs import GPSData
+import struct
 lcm_ = lcm.LCM()
 
 baud = 38400
@@ -10,10 +11,19 @@ baud = 38400
 def main():
 
     gps = GPSData()
+    tempTimeStamp = 0
+    # default frequency of data collection
+    milliseconds = 40
+    # hex converted to int to satisfy python gods
+    keyId = 807469057
+    frequencyBytes = struct.pack(">h", milliseconds)
+    commandBytes = struct.pack(">I", keyId)
     with serial.Serial(port="/dev/ttyS4", bytesize=serial.EIGHTBITS,
                        stopbits=serial.STOPBITS_ONE,
                        parity=serial.PARITY_NONE, xonxoff=False, rtscts=False,
                        dsrdtr=False, baudrate=baud) as ser:
+        ser.write(commandBytes)
+        ser.write(frequencyBytes)
         while(True):
             # reads in data as a string
             data = str(ser.read_until())
@@ -37,35 +47,34 @@ def main():
                 if(datalist[1] != ""):
                     gps.timeStamp = float(datalist[1])
                 else:
-                    gps.timeStamp = 0
+                    gps.timeStamp = tempTimeStamp
                 # dddmm.mmmm format (degrees, minutes, minutes/seconds
                 if(datalist[3] != ""):
-                    gps.latitude_deg = float(int(datalist[3] / 100, 10))
-                    gps.latitude_min = datalist[3] % 100
+                    if(datalist[4] == "N"):
+                        gps.latitude_deg = int(float(datalist[3]) / 100)
+                        gps.latitude_min = float(datalist[3]) % 100
+                    elif(datalist[4] == "S"):
+                        gps.latitude_deg = int(float(datalist[3]) / 100) * -1.0
+                        gps.latitude_min = float(datalist[3]) % 100
                 else:
                     gps.latitude_deg = 0
                     gps.latitude_min = 0
-                # Direction (North East West South)
-                if(datalist[4] != ""):
-                    gps.latitudeDirection = datalist[4]
-                else:
-                    gps.latitudeDirection = "-"
                 if(datalist[5] != ""):
-                    gps.longitude_deg = float(int(datalist[5] / 100, 10))
-                    gps.longitude_min = datalist[5] % 100
+                    if(datalist[6] == "W"):
+                        gps.longitude_deg = int(float(datalist[5]) / 100)
+                        gps.longitude_min = float(datalist[5]) % 100
+                    elif(datalist[6] == "E"):
+                        gps.longitude_deg = int(float(datalist[5]) / 100) * -1
+                        gps.longitude_min = float(datalist[5]) % 100
                 else:
                     gps.longitude_deg = 0
                     gps.longitude_min = 0
-                if(datalist[6] != ""):
-                    gps.longitudeDirection = datalist[6]
-                else:
-                    gps.longitudeDirection = "-"
                 if(datalist[8] != ''):
                     # degrees
-                    gps.trackAngle = float(datalist[8])
+                    gps.bearing_deg = float(datalist[8])
                 else:
                     # degrees
-                    gps.trackAngle = 0
+                    gps.bearing_deg = 0
 
             elif(datalist[0] == "$GNVTG"):
                 # print("Transmission Type:", datalist[0],
@@ -76,9 +85,9 @@ def main():
 
                 # km/h
                 if(datalist[7] != ""):
-                    gps.groundSpeed = float(datalist[7])
+                    gps.speed = float(datalist[7])
                 else:
-                    gps.groundSpeed = 0
+                    gps.speed = 0
             elif(datalist[0] == "$GNGGA"):
                 # print("Transmission Type:", datalist[0],
                 # "Fix Quality(4=RTK):", datalist[6],
@@ -108,7 +117,10 @@ def main():
                     gps.satellitesInView = int(datalist[3], 10)
                 else:
                     gps.satellitesInView = 0
-            lcm_.publish('/gps_data', gps.encode())
+            if(tempTimeStamp != gps.timeStamp):
+                # publishes data
+                lcm_.publish('/gps_data', gps.encode())
+                tempTimeStamp = gps.timeStamp
 
 
 if (__name__ == "__main__"):
