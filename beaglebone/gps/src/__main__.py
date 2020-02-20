@@ -1,5 +1,4 @@
 import serial
-# import string
 import lcm
 from rover_msgs import GPSData
 import struct
@@ -12,18 +11,57 @@ def main():
 
     gps = GPSData()
     tempTimeStamp = 0
-    # default frequency of data collection
-    milliseconds = 40
-    # hex converted to int to satisfy python gods
-    keyId = 807469057
+    # 4 byte code for the register where cfg-rate is located
+    header1 = 181
+    header2 = 98
+    classId = 6
+    Id = 8
+    # message size (bytes)
+    payloadSize = 6
+    # frequency of data collection
+    milliseconds = 50
+    # number of measurements per solution
+    navRatio = 1
+    # time reference (UTC, GPS, etc)
+    timeRef = 1
+    # byteOffset
+    byteOffset = 0
+
+    # This block changes above constants int bytes or shorts
+    comBytes1 = struct.pack("<B", header1)
+    comBytes2 = struct.pack("<b", header2)
     frequencyBytes = struct.pack(">h", milliseconds)
-    commandBytes = struct.pack(">I", keyId)
+    navRatioBytes = struct.pack(">h", navRatio)
+    timeRefBytes = struct.pack(">h", timeRef)
+
+    # Calculating checksum
+    Buffer = [classId, Id, payloadSize, frequencyBytes[0], frequencyBytes[1],
+              navRatioBytes[0], navRatioBytes[1], timeRefBytes[0],
+              timeRefBytes[1], byteOffset]
+    ck_a = 0
+    ck_b = 0
+    for i in range(10):
+        ck_a = ck_a + Buffer[i]
+        ck_b = ck_b + ck_a
+    # bitmasking (in equation in doc sheet)
+    ck_a = ck_a & 0xFF
+    ck_b = ck_b & 0xFF
+
+    ck_aBytes = struct.pack("<b", ck_a)
+    ck_bBytes = struct.pack("<B", ck_b)
+
     with serial.Serial(port="/dev/ttyS4", bytesize=serial.EIGHTBITS,
                        stopbits=serial.STOPBITS_ONE,
                        parity=serial.PARITY_NONE, xonxoff=False, rtscts=False,
                        dsrdtr=False, baudrate=baud) as ser:
-        ser.write(commandBytes)
-        ser.write(frequencyBytes)
+
+        # writes a 14 byte command specifically to the cfg-rate settings
+        ser.write(comBytes1)
+        ser.write(comBytes2)
+        ser.write(bytearray(Buffer))
+        ser.write(ck_aBytes)
+        ser.write(ck_bBytes)
+
         while(True):
             # reads in data as a string
             data = str(ser.read_until())
@@ -94,7 +132,6 @@ def main():
                 # "Number of satellites tracked:", datalist[7],
                 # "Altitude (above mean sea level):", datalist[9],
                 # "time since last DGPS update (s):", datalist[11])
-
                 # 0-4
                 if(datalist[6] != ""):
                     gps.quality = int(datalist[6], 10)
@@ -119,6 +156,7 @@ def main():
                     gps.satellitesInView = 0
             if(tempTimeStamp != gps.timeStamp):
                 # publishes data
+                # print("tempTime:", tempTimeStamp, "tStamp:", gps.timeStamp)
                 lcm_.publish('/gps_data', gps.encode())
                 tempTimeStamp = gps.timeStamp
 
