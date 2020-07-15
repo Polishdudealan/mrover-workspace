@@ -2,13 +2,19 @@ Code for the ZED-F9P GNSS Module u-blox GPS Receiver
 ===================================================
 ### About
 This is the code running the onboard GPS receiver. The receiver is constantly getting navigational data (latitude, longitude, speed, etc) and publishing it through LCM.
+
+### LCM Channels
+GPS Data [Publisher]\
+Messages: [GPSData.lcm](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/GPSData.lcm)\
+Publishers: beaglebone/gps
+
 ### Usage
 Required electrical components: \
 1 Antenna \
 1 u-blox GPS \
 1 Beaglebone green/black
 
-Connect the UART ports on the reveiver and beaglebone together (TXD to RXD and vice versa) and make sure to power the IOREF pin on the receiver with 5.5V otherwise UART will not be enabled. The Beaglebone and receiver also need to be powered. Two USB to USB Micro cables will do the trick. 
+Connect the UART ports on the reveiver and beaglebone together (TXD to RXD and vice versa) and make sure to power the IOREF pin on the receiver with 5.5V otherwise UART will not be enabled. The Beaglebone and receiver also need to be powered. Two USB to USB Micro cables will do the trick. The GPS receiver can also be configured through the GUI (To increase sampling rate for example).
 
 ### Building
 SSH into the Beaglebone and open up the terminal. Type\
@@ -40,6 +46,9 @@ This GPS also comes with a GUI from u-blox that is fairly easy to setup. It oper
 
 ### NMEA Sentences
 NMEA Sentences, or National Marine Electronics Association Sentences, is a data standard that provide satellite data to GPS receivers. There are different types of sentences with different data, configurations, and datatypes. See resources below for more info.
+
+### Debugging
+No data will be found if the GPS antenna does not "see" any satellites. For best performance, a clear view of the sky will be needed for the antenna.
 
 ### Notes
 In receiving LCM messages, "GPSData" might be changed to "GPS" in the future.
