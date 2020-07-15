@@ -3,10 +3,11 @@ Code for the ZED-F9P GNSS Module u-blox GPS Receiver
 ### About
 This is the code running the onboard GPS receiver. The receiver is constantly getting navigational data (latitude, longitude, speed, etc) and publishing it through LCM.
 
-### LCM Channels
+#### LCM Channels
 GPS Data [Publisher]\
-Messages: [GPSData.lcm](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/GPSData.lcm)\
-Publishers: beaglebone/gps
+Messages: [GPSData.lcm](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/GPSData.lcm) "/gps_data"\
+Publishers: beaglebone/gps\
+Subscribers: [either 'none' or whatever channel reads the gps data]
 
 ### Usage
 Required electrical components: \
@@ -16,13 +17,13 @@ Required electrical components: \
 
 Connect the UART ports on the reveiver and beaglebone together (TXD to RXD and vice versa) and make sure to power the IOREF pin on the receiver with 5.5V otherwise UART will not be enabled. The Beaglebone and receiver also need to be powered. Two USB to USB Micro cables will do the trick. The GPS receiver can also be configured through the GUI (To increase sampling rate for example).
 
-### Building
+#### Building
 SSH into the Beaglebone and open up the terminal. Type\
 ```$ cd ~/mrover-workspace/``` to move to the mrover-workspace directory\
 ```$ ./jarvis build beaglebone/gps``` to build the gps program\
 ```$ ./jarvis exec beaglebone_gps``` to run the gps program
 
-### Testing with LCM Echoer
+#### LCM Commands
 First set up the UART ports.\
 ```$ python3```\
 ```>>> import Adafruit_BBIO.UART as UART```\
@@ -37,14 +38,14 @@ in order to setup the network (or optionally set up internet).
 To send LCM messages, type\
 ```$ LCM_DEFAULT_URL="udpm://239.255.76.67:7667?ttl=255" ./jarvis exec beaglebone_gps```
 
-To receive LCM messages, in a *new* window type\
+To receive LCM messages, in a *new* terminal type\
 ```$ LCM_DEFAULT_URL="udpm://239.255.76.67:7667?ttl=255" ./jarvis exec lcm_tools_echo GPSData /gps_data```\
-LCM Messages should start appearing in the new window.
+LCM Messages should start appearing in the new terminal.
 
-### GUI Info
+#### GUI Info
 This GPS also comes with a GUI from u-blox that is fairly easy to setup. It operates with just a USB connection (Make sure the power+gps side is the one plugged in). See resources below for more info.
 
-### NMEA Sentences
+#### NMEA Sentences
 NMEA Sentences, or National Marine Electronics Association Sentences, is a data standard that provide satellite data to GPS receivers. There are different types of sentences with different data, configurations, and datatypes. See resources below for more info.
 
 ### Debugging
