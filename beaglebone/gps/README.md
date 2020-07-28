@@ -7,7 +7,7 @@ This is the code running the onboard GPS receiver. The receiver is constantly ge
 GPS Data [Publisher]\
 Messages: [GPSData.lcm](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/GPSData.lcm) "/gps_data"\
 Publishers: beaglebone/gps\
-Subscribers: [either 'none' or whatever channel reads the gps data]
+Subscribers: onboard/filter and onboard/sensor_logging
 
 ### Usage
 Required electrical components: \
