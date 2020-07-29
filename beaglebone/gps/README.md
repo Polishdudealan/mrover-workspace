@@ -24,7 +24,7 @@ SSH into the Beaglebone and open up the terminal. Type\
 ```$ ./jarvis exec beaglebone_gps``` to run the gps program
 
 #### LCM Commands
-First set up the UART ports.\
+First open up the python terminal and set up the UART ports.\
 ```$ python3```\
 ```>>> import Adafruit_BBIO.UART as UART```\
 ```>>> UART.setup("UART4")```\
