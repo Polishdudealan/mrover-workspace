@@ -52,7 +52,9 @@ NMEA Sentences, or National Marine Electronics Association Sentences, is a data 
 No data will be found if the GPS antenna does not "see" any satellites. For best performance, a clear view of the sky will be needed for the antenna.
 
 ### Notes
-In receiving LCM messages, "GPSData" might be changed to "GPS" in the future.
+In receiving LCM messages, "GPSData" might be changed to "GPS" in the future. GPS.lcm is the old struct from 2+ years ago.\
+The source code starts by sending a byte array to the GPS reciever to configure its data acquisition rate to 25Hz. This is only a runtime change. There are more configuration options (runtime and permament) available throught the GUI.
+
 
 ### Resources & Data Sheets
 [u-blox ZED-F9P GPS Datasheet](https://www.u-blox.com/sites/default/files/ZED-F9P_DataSheet_%28UBX-17051259%29.pdf)\
