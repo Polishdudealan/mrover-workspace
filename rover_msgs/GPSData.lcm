@@ -7,11 +7,11 @@ struct GPSData {
 	
 	//Degrees
 	//Will be "0" if empty
-	int16_t latitude_deg;
+	int16_t latitude<deg>;
 
 	//Degrees
 	//Will be "0" if empty
-	double latitude_min;
+	double latitude<min>;
 
 	//North/South
 	//Will be "-" if empty
@@ -19,21 +19,21 @@ struct GPSData {
 
 	//Degrees
 	//Will be "0" if empty
-	int16_t longitude_deg;
+	int16_t longitude<deg>;
 
 	//minutes
 	//Will be "0" if empty
-	double longitude_min;
+	double longitude<min>;
 	
 	//East/West
 	//Will be "-" if empty
 	string longitudeDirection;
 
-	//km/s
+	//km/h
 	//Will be "0" if empty
-	double speed;
+	double speed<kmh>;
 
 	//degrees
 	//Will be "0" if empty
-	double trackAngle_deg;
+	double trackAngle<deg>;
 }
