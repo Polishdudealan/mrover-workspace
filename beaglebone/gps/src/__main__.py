@@ -90,36 +90,36 @@ def main():
                 # dddmm.mmmm format (degrees, minutes, minutes/seconds
                 if(datalist[3] != ""):
                     if(datalist[4] == "N"):
-                        gps.latitude_deg = np.int16(int(float(datalist[3]) / 100))
-                        gps.latitude_min = float(datalist[3]) % 100
+                        gps.latitude<deg> = np.int16(int(float(datalist[3]) / 100))
+                        gps.latitude<min> = float(datalist[3]) % 100
                         gps.latitudeDirection = "N"
                     elif(datalist[4] == "S"):
-                        gps.latitude_deg = np.int16(int(float(datalist[3]) / 100) * -1.0)
-                        gps.latitude_min = float(datalist[3]) % 100
+                        gps.latitude<deg> = np.int16(int(float(datalist[3]) / 100) * -1.0)
+                        gps.latitude<min> = float(datalist[3]) % 100
                         gps.latitudeDirection = "S"
                 else:
-                    gps.latitude_deg = 0
-                    gps.latitude_min = 0
+                    gps.latitude<deg> = 0
+                    gps.latitude<min> = 0
                     gps.latitudeDirection = "-"
                 if(datalist[5] != ""):
                     if(datalist[6] == "W"):
-                        gps.longitude_deg = np.int16(int(float(datalist[5]) / 100))
-                        gps.longitude_min = float(datalist[5]) % 100
+                        gps.longitude<deg> = np.int16(int(float(datalist[5]) / 100))
+                        gps.longitude<min> = float(datalist[5]) % 100
                         gps.longitudeDirection = "W"
                     elif(datalist[6] == "E"):
-                        gps.longitude_deg = np.int16(int(float(datalist[5]) / 100) * -1.0)
-                        gps.longitude_min = float(datalist[5]) % 100
+                        gps.longitude<deg> = np.int16(int(float(datalist[5]) / 100) * -1.0)
+                        gps.longitude<min> = float(datalist[5]) % 100
                         gps.longitudeDirection = "E"
                 else:
-                    gps.longitude_deg = 0
-                    gps.longitude_min = 0
+                    gps.longitude<deg> = 0
+                    gps.longitude<min> = 0
                     gps.longitudeDirection = "-"
                 if(datalist[8] != ''):
                     # degrees
-                    gps.trackAngle_deg = float(datalist[8])
+                    gps.trackAngle<deg> = float(datalist[8])
                 else:
                     # degrees
-                    gps.trackAngle_deg = 0
+                    gps.trackAngle<deg> = 0
 
             elif(datalist[0] == "$GNVTG"):
                 # print("Transmission Type:", datalist[0],
@@ -130,9 +130,9 @@ def main():
 
                 # km/h
                 if(datalist[7] != ""):
-                    gps.speed = float(datalist[7])
+                    gps.speed<kmh> = float(datalist[7])
                 else:
-                    gps.speed = 0
+                    gps.speed<kmh> = 0
             # elif(datalist[0] == "$GNGGA"):
                 # print("Transmission Type:", datalist[0],
                 # "Fix Quality(4=RTK):", datalist[6],
