@@ -133,9 +133,9 @@ def main():
 
                 # km/h
                 if(datalist[7] != ""):
-                    gps.speed<km/s> = float(datalist[7])
+                    gps.speed<km/h> = float(datalist[7])
                 else:
-                    gps.speed<km/s> = 0
+                    gps.speed<km/h> = 0
             elif(datalist[0] == "$GNGGA"):
                 # print("Transmission Type:", datalist[0],
                 # "Fix Quality(4=RTK):", datalist[6],

@@ -26,7 +26,7 @@ struct GPSData {
 	//Will be "0" if empty
 	int16_t quality; //quality 1-4, 4 = RTK
 
-	double speed<km/s>; //km/s
+	double speed<km/h>; //km/h
 
 	double trackAngle<deg>; //degrees
 }
