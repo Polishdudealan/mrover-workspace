@@ -24,13 +24,9 @@ SSH into the Beaglebone and open up the terminal. Type\
 ```$ ./jarvis exec beaglebone_gps``` to run the gps program
 
 #### LCM Commands
-First open up the python terminal and set up the UART ports.\
-```$ python3```\
-```>>> import Adafruit_BBIO.UART as UART```\
-```>>> UART.setup("UART4")```\
-```>>> exit()```
+UART Ports Should be setup automatically within the program.
 
-Then in the mrover-workspace directory, type\
+In the mrover-workspace directory, type\
 ```$ sudo ifconfig lo multicast```\
 ```$ sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev lo```\
 in order to setup the network (or optionally set up internet).
@@ -50,6 +46,11 @@ NMEA Sentences, or National Marine Electronics Association Sentences, is a data 
 
 ### Debugging
 No data will be found if the GPS antenna does not "see" any satellites. For best performance, a clear view of the sky will be needed for the antenna.
+UART Ports should be setup automatically, however, if issues arise, try the following commands to setup ports manually.\
+```$ python3```\
+```>>> import Adafruit_BBIO.UART as UART```\
+```>>> UART.setup("UART4")```\
+```>>> exit()```
 
 ### Notes
 In receiving LCM messages, "GPSData" might be changed to "GPS" in the future. Current GPS.lcm is the old struct from 2+ years ago.\
