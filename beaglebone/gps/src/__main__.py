@@ -1,16 +1,19 @@
 import serial
 import lcm
-from rover_msgs import GPSData
+from rover_msgs import GPS
 import struct
 import numpy as np
+import Adafruit_BBIO.UART as UART
 lcm_ = lcm.LCM()
 
 baud = 38400
 
 
 def main():
+    # Setup UART ports
+    UART.setup("UART4")
 
-    gps = GPSData()
+    gps = GPS()
     tempTimeStamp = 0
     # 4 byte code for the register where cfg-rate is located
     header1 = 181
@@ -90,36 +93,36 @@ def main():
                 # dddmm.mmmm format (degrees, minutes, minutes/seconds
                 if(datalist[3] != ""):
                     if(datalist[4] == "N"):
-                        gps.latitude_deg = np.int16(int(float(datalist[3]) / 100))
-                        gps.latitude_min = float(datalist[3]) % 100
+                        gps.latitude<deg> = np.int16(int(float(datalist[3]) / 100))
+                        gps.latitude<min> = float(datalist[3]) % 100
                         gps.latitudeDirection = "N"
                     elif(datalist[4] == "S"):
-                        gps.latitude_deg = np.int16(int(float(datalist[3]) / 100) * -1.0)
-                        gps.latitude_min = float(datalist[3]) % 100
+                        gps.latitude<deg> = np.int16(int(float(datalist[3]) / 100) * -1.0)
+                        gps.latitude<min> = (float(datalist[3]) % 100) * -1.0
                         gps.latitudeDirection = "S"
                 else:
-                    gps.latitude_deg = 0
-                    gps.latitude_min = 0
+                    gps.latitude<deg> = 0
+                    gps.latitude<min> = 0
                     gps.latitudeDirection = "-"
                 if(datalist[5] != ""):
                     if(datalist[6] == "W"):
-                        gps.longitude_deg = np.int16(int(float(datalist[5]) / 100))
-                        gps.longitude_min = float(datalist[5]) % 100
+                        gps.longitude<deg> = np.int16(int(float(datalist[5]) / 100) * -1.0)
+                        gps.longitude<min> = (float(datalist[5]) % 100)  * -1.0
                         gps.longitudeDirection = "W"
                     elif(datalist[6] == "E"):
-                        gps.longitude_deg = np.int16(int(float(datalist[5]) / 100) * -1.0)
-                        gps.longitude_min = float(datalist[5]) % 100
+                        gps.longitude<deg> = np.int16(int(float(datalist[5]) / 100))
+                        gps.longitude<min> = float(datalist[5]) % 100
                         gps.longitudeDirection = "E"
                 else:
-                    gps.longitude_deg = 0
-                    gps.longitude_min = 0
+                    gps.longitude<deg> = 0
+                    gps.longitude<min> = 0
                     gps.longitudeDirection = "-"
                 if(datalist[8] != ''):
                     # degrees
-                    gps.trackAngle_deg = float(datalist[8])
+                    gps.trackAngle<deg> = float(datalist[8])
                 else:
                     # degrees
-                    gps.trackAngle_deg = 0
+                    gps.trackAngle<deg> = 0
 
             elif(datalist[0] == "$GNVTG"):
                 # print("Transmission Type:", datalist[0],
@@ -130,20 +133,20 @@ def main():
 
                 # km/h
                 if(datalist[7] != ""):
-                    gps.speed = float(datalist[7])
+                    gps.speed<km/s> = float(datalist[7])
                 else:
-                    gps.speed = 0
-            # elif(datalist[0] == "$GNGGA"):
+                    gps.speed<km/s> = 0
+            elif(datalist[0] == "$GNGGA"):
                 # print("Transmission Type:", datalist[0],
                 # "Fix Quality(4=RTK):", datalist[6],
                 # "Number of satellites tracked:", datalist[7],
                 # "Altitude (above mean sea level):", datalist[9],
                 # "time since last DGPS update (s):", datalist[11])
                 # 0-4
-                # if(datalist[6] != ""):
-                    # gps.quality = int(datalist[6], 10)
-                # else:
-                    # gps.quality = 0
+                if(datalist[6] != ""):
+                    gps.quality = int(datalist[6], 10)
+                else:
+                    gps.quality = 0
 
                 # mean sea level altitude in meters
                 # if(datalist[9] != ""):
