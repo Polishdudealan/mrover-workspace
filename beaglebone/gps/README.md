@@ -4,8 +4,8 @@ Code for the ZED-F9P GNSS Module u-blox GPS Receiver
 This is the code running the onboard GPS receiver. The receiver is constantly getting navigational data (latitude, longitude, speed, etc) and publishing it through LCM.
 
 #### LCM Channels
-GPS Data [Publisher]\
-Messages: [GPSData.lcm](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/GPSData.lcm) "/gps_data"\
+GPS [Publisher]\
+Messages: [GPS.lcm](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/GPS.lcm) "/gps_data"\
 Publishers: beaglebone/gps\
 Subscribers: onboard/filter and onboard/sensor_logging
 
@@ -13,7 +13,8 @@ Subscribers: onboard/filter and onboard/sensor_logging
 Required electrical components: \
 1 Antenna \
 1 u-blox GPS \
-1 Beaglebone green/black
+1 Beaglebone green/black\
+3 Solid-core male-male wires
 
 Connect the UART ports on the reveiver and beaglebone together (TXD to RXD and vice versa) and make sure to power the IOREF pin on the receiver with 5.5V otherwise UART will not be enabled. The Beaglebone and receiver also need to be powered. Two USB to USB Micro cables will do the trick. The GPS receiver can also be configured through the GUI (To increase sampling rate for example).
 
@@ -35,7 +36,7 @@ To send LCM messages, type\
 ```$ LCM_DEFAULT_URL="udpm://239.255.76.67:7667?ttl=255" ./jarvis exec beaglebone_gps```
 
 To receive LCM messages, in a *new* terminal type\
-```$ LCM_DEFAULT_URL="udpm://239.255.76.67:7667?ttl=255" ./jarvis exec lcm_tools_echo GPSData /gps_data```\
+```$ LCM_DEFAULT_URL="udpm://239.255.76.67:7667?ttl=255" ./jarvis exec lcm_tools_echo GPS /gps_data```\
 LCM Messages should start appearing in the new terminal.
 
 #### GUI Info
@@ -53,7 +54,6 @@ UART Ports should be setup automatically, however, if issues arise, try the foll
 ```>>> exit()```
 
 ### Notes
-In receiving LCM messages, "GPSData" might be changed to "GPS" in the future. Current GPS.lcm is the old struct from 2+ years ago.\
 The source code starts by sending a byte array to the GPS reciever to configure its data acquisition rate to 25Hz. This is only a runtime change. There are more configuration options (runtime and permament) available throught the GUI.
 
 
