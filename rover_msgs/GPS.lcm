@@ -1,12 +1,12 @@
 package rover_msgs;
 
-struct GPSData {
+struct GPS {
 	//Will be "0" if empty
 	double timeStamp; //UTC time hhmmss.sss format
 	
-	int16_t latitude<deg>; //Degrees
+	int16_t latitude_deg; //Degrees
 
-	double latitude<min>; //Minutes
+	double latitude_min; //Minutes
 
 	
 	//Will be "-" if empty
@@ -14,9 +14,9 @@ struct GPSData {
 
 	
 	//Will be "0" if empty
-	int16_t longitude<deg>; //Degrees
+	int16_t longitude_deg; //Degrees
 
-	double longitude<min>; //Minutes
+	double longitude_min; //Minutes
 	
 
 	//Will be "-" if empty
@@ -24,9 +24,9 @@ struct GPSData {
 
 
 	//Will be "0" if empty
-	int16_t quality; //quality 1-4, 4 = RTK
+	int16_t quality; //quality 0-8, 4 = RTK
 
-	double speed<km/h>; //km/h
+	double speed_kmh; //kmh
 
-	double trackAngle<deg>; //degrees
+	double trackAngle_deg; //degrees
 }

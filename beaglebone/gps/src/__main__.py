@@ -65,26 +65,12 @@ def main():
         ser.write(bytearray(Buffer))
         ser.write(ck_aBytes)
         ser.write(ck_bBytes)
-
         while(True):
-            # reads in data as a string
+            # reads in data as a string and formats it into a list
             data = str(ser.read_until())
-            # removes extra quotes around the data string
             datastring = data[2:-1]
-
-            # splits up correctly formatted string into a list of strings
             datalist = datastring.split(',')
-            # print("datalist is of type: ", type(datalist), "size is: ",
-            # len(datalist))
             if(datalist[0] == "$GNRMC"):
-                #  print("Transmission Type:", datalist[0], "timeStamp:",
-                # datalist[1],
-                # "Status (A=active, V = void):", datalist[2],
-                # "Latitude:", datalist[3], ",", datalist[4], "Longitude:",
-                # datalist[5],
-                # ",", datalist[6], "Ground speed(knots):", datalist[7],
-                # "Track angle(in Degrees True):", datalist[8])
-
                 # time
                 if(datalist[1] != ""):
                     gps.timeStamp = float(datalist[1])
@@ -93,80 +79,50 @@ def main():
                 # dddmm.mmmm format (degrees, minutes, minutes/seconds
                 if(datalist[3] != ""):
                     if(datalist[4] == "N"):
-                        gps.latitude<deg> = np.int16(int(float(datalist[3]) / 100))
-                        gps.latitude<min> = float(datalist[3]) % 100
+                        gps.latitude_deg = np.int16(int(float(datalist[3]) / 100))
+                        gps.latitude_min = float(datalist[3]) % 100
                         gps.latitudeDirection = "N"
                     elif(datalist[4] == "S"):
-                        gps.latitude<deg> = np.int16(int(float(datalist[3]) / 100) * -1.0)
-                        gps.latitude<min> = (float(datalist[3]) % 100) * -1.0
+                        gps.latitude_deg = np.int16(int(float(datalist[3]) / 100) * -1.0)
+                        gps.latitude_min = (float(datalist[3]) % 100) * -1.0
                         gps.latitudeDirection = "S"
                 else:
-                    gps.latitude<deg> = 0
-                    gps.latitude<min> = 0
+                    gps.latitude_deg = 0
+                    gps.latitude_min = 0
                     gps.latitudeDirection = "-"
                 if(datalist[5] != ""):
                     if(datalist[6] == "W"):
-                        gps.longitude<deg> = np.int16(int(float(datalist[5]) / 100) * -1.0)
-                        gps.longitude<min> = (float(datalist[5]) % 100)  * -1.0
+                        gps.longitude_deg = np.int16(int(float(datalist[5]) / 100) * -1.0)
+                        gps.longitude_min = (float(datalist[5]) % 100) * -1.0
                         gps.longitudeDirection = "W"
                     elif(datalist[6] == "E"):
-                        gps.longitude<deg> = np.int16(int(float(datalist[5]) / 100))
-                        gps.longitude<min> = float(datalist[5]) % 100
+                        gps.longitude_deg = np.int16(int(float(datalist[5]) / 100))
+                        gps.longitude_min = float(datalist[5]) % 100
                         gps.longitudeDirection = "E"
                 else:
-                    gps.longitude<deg> = 0
-                    gps.longitude<min> = 0
+                    gps.longitude_deg = 0
+                    gps.longitude_min = 0
                     gps.longitudeDirection = "-"
                 if(datalist[8] != ''):
                     # degrees
-                    gps.trackAngle<deg> = float(datalist[8])
+                    gps.trackAngle_deg = float(datalist[8])
                 else:
                     # degrees
-                    gps.trackAngle<deg> = 0
-
+                    gps.trackAngle_deg = 0
             elif(datalist[0] == "$GNVTG"):
-                # print("Transmission Type:", datalist[0],
-                # "True track made good:", datalist[1],
-                # "Magnetic track:", datalist[2], "Ground speed(knots):",
-                # datalist[3],
-                # "Ground speed(km/h):", datalist[7])
-
                 # km/h
                 if(datalist[7] != ""):
-                    gps.speed<km/h> = float(datalist[7])
+                    gps.speed_kmh = float(datalist[7])
                 else:
-                    gps.speed<km/h> = 0
+                    gps.speed_kmh = 0
             elif(datalist[0] == "$GNGGA"):
-                # print("Transmission Type:", datalist[0],
-                # "Fix Quality(4=RTK):", datalist[6],
-                # "Number of satellites tracked:", datalist[7],
-                # "Altitude (above mean sea level):", datalist[9],
-                # "time since last DGPS update (s):", datalist[11])
-                # 0-4
+                # 0-8
                 if(datalist[6] != ""):
                     gps.quality = int(datalist[6], 10)
                 else:
                     gps.quality = 0
-
-                # mean sea level altitude in meters
-                # if(datalist[9] != ""):
-                    # gps.altitude = float(datalist[9])
-                # else:
-                    # gps.altitude = 0
-            # elif(datalist[0] == "$GPGSV"):
-                # print("Transmission Type:", datalist[0],
-                # "# of sentences for full data:", datalist[1],
-                # "Sentence _ of total:", datalist[2],
-                # "# satellites in view:", datalist[3]
-
-                # int
-                # if(datalist[3] != ""):
-                    # gps.satellitesInView = int(datalist[3], 10)
-                # else:
-                    # gps.satellitesInView = 0
             if(tempTimeStamp != gps.timeStamp):
                 # publishes data
-                # print("tempTime:", tempTimeStamp, "tStamp:", gps.timeStamp)
                 lcm_.publish('/gps_data', gps.encode())
                 tempTimeStamp = gps.timeStamp
 
