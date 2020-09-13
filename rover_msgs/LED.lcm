@@ -1,7 +1,0 @@
-package rover_msgs;
-
-struct LED {
-
-    string mode; //A = auton, M = manual, L = leg finished
-
-}
