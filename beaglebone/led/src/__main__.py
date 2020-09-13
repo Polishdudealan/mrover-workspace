@@ -7,12 +7,9 @@ lcm_ = lcm.LCM()
 
 baud = 9600
 
-def send_data():
-
-
 def main():
     UART.setup("UART4")
-    lmc = LCM()
+    led = LED()
 
     with serial.Serial(port="/dev/ttyS4", baudrate=baud) as ser:
         ser.close()
@@ -20,21 +17,20 @@ def main():
 
         while(True):
             if ser.isOpen():
-                
-                if led.mode = "A":
-                    # TODO
-                    pass
-                elif led.mode = "M":
-                    # TODO
-                    pass
-                elif led.mode = "L":
-                    # TODO
-                    pass
-                else:
-                    "Unable to read lcm struct"
+                try:
+                    if led.mode == "A":
+                        ser.write("A".encode('utf-8'))
+                    elif led.mode == "M":
+                        ser.write("M".encode('utf-8'))
+                    elif led.mode == "L":
+                        ser.write("L".encode('utf-8'))
+                    else:
+                        print("Unable to read lcm struct")
+                except ser.SerialTimeoutException:
+                    print("write timeout")
+            else:
+                print("Serial is not open")
 
 
-
-
-def(if __name__ == "__main__"):
+if __name__ == "__main__":
     main()
