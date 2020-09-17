@@ -8,8 +8,8 @@ This program runs on the beaglebone. It interprets the led lcm struct and sends 
 
 #### LCM Channels
 LED [subscriber]\
-Messages: [LEDCmd](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/LEDCmd.lcm)
-Publishers: Auton Team
+Messages: [LEDCmd](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/LEDCmd.lcm)\
+Publishers: Auton Team\
 Subscribers: beaglebone/led
 
 
