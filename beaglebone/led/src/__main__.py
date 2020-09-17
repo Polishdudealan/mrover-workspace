@@ -1,35 +1,40 @@
 import serial
 import lcm
-from rover_msgs import LED
+from rover_msgs import LEDCmd
 import struct
 import Adafruit_BBIO.UART as UART
 lcm_ = lcm.LCM()
 
 baud = 9600
 
+def led_callback(channel, msg):
+    led = LEDCmd.decode(msg)
+
+    if ser.isOpen():
+        try:
+            if led.mode == "A":
+                ser.write("A".encode('utf-8'))
+            elif led.mode == "M":
+                ser.write("M".encode('utf-8'))
+            elif led.mode == "L":
+                ser.write("L".encode('utf-8'))
+            else:
+                print("Unable to read lcm struct")
+        except ser.SerialTimeoutException:
+            print("write timeout")
+    else:
+        print("Serial is not open")
+
 def main():
+    lcm_.subscribe("/led_cmd", led_callback)
     UART.setup("UART4")
     led = LED()
-
     with serial.Serial(port="/dev/ttyS4", baudrate=baud) as ser:
         ser.close()
         ser.open()
 
         while(True):
-            if ser.isOpen():
-                try:
-                    if led.mode == "A":
-                        ser.write("A".encode('utf-8'))
-                    elif led.mode == "M":
-                        ser.write("M".encode('utf-8'))
-                    elif led.mode == "L":
-                        ser.write("L".encode('utf-8'))
-                    else:
-                        print("Unable to read lcm struct")
-                except ser.SerialTimeoutException:
-                    print("write timeout")
-            else:
-                print("Serial is not open")
+            lcm_.handle()
 
 
 if __name__ == "__main__":
