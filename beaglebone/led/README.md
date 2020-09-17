@@ -1,4 +1,4 @@
-Code for led control.
+Code for communicating with the NeoPixel NeoMatrix 8x8 - 64 RGB LED Pixel Matrix
 ===========================================================
 ### About
 This program runs on the beaglebone. It interprets the led lcm struct and sends corresponding commands through UART to an arduino which drives the led board. It sends the following three strings as bytes depending on the command in the lcm struct.
@@ -7,14 +7,18 @@ This program runs on the beaglebone. It interprets the led lcm struct and sends 
 - "L" if the mode is Leg (once a leg of the autonomous path has been completed)
 
 #### LCM Channels
-LED [Subscriber]\
+LED [subscriber]\
+Messages: [LEDCmd](https://github.com/Polishdudealan/mrover-workspace/blob/master/rover_msgs/LEDCmd.lcm)
 Publishers: Auton Team
+Subscribers: beaglebone/led
+
 
 ### Usage
 Required components:\
 1 Beaglebone Black\
-1 Arduino\
-1 solid-core male-male wire
+1 Arduino Uno\
+1 solid-core male-male jumper cable
+1 NeoPixel NeoMatrix 8x8 - 64 RGB LED Pixel Matrix
 
 Since the commands will only be going one way, from the BB to the arduino, we only need to connect the BB's transmit UART port to the arduino's Receive UART port. 
 You may also want to ground the two devices together but that is optional depending on how they are being powered.
