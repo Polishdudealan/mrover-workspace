@@ -8,7 +8,8 @@ This program runs on the beaglebone. It interprets the led lcm struct and sends 
 
 #### LCM Channels
 LED [subscriber]\
-Messages: [LEDCmd](https://github.com/Polishdudealan/mrover-workspace/blob/led/rover_msgs/LEDCmd.lcm)\
+Messages: [AutonState](https://github.com/Polishdudealan/mrover-workspace/blob/led/rover_msgs/AutonState.lcm)\
+          [NavStatus](https://github.com/Polishdudealan/mrover-workspace/blob/led/rover_msgs/NavStatus.lcm)\
 Publishers: Auton Team\
 Subscribers: beaglebone/led
 
@@ -33,5 +34,5 @@ SSH into the Beaglebone and open up the terminal. Type\
 Currently there is only one exception being looked for, the WriteTimemoutException from the pyserial Write() command. If the exception occurs, an error message will print out to the console.
 
 #### ToDo
-- [ ] build and test code on Beaglebone.
+- [x] build and test code on Beaglebone.
 - [ ] test code with arduino.
