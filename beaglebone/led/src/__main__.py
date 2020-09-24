@@ -8,15 +8,15 @@ baud = 9600
 
 
 def nav_status_callback(channel, msg):
-    state = NavStatus.decode(msg)
+    status = NavStatus.decode(msg)
     with serial.Serial(port="/dev/ttyS4", baudrate=baud) as ser:
         if ser.isOpen():
             try:
-                if led.state == "A":
+                if status.nav_state_name == "A":
                     ser.write("A".encode('utf-8'))
-                elif led.state == "M":
+                elif status.nav_state_name == "M":
                     ser.write("M".encode('utf-8'))
-                elif led.state == "Done":
+                elif status.nav_state_name == "Done":
                     ser.write("D".encode('utf-8'))
                 else:
                     print("Unable to read lcm struct")
@@ -24,6 +24,7 @@ def nav_status_callback(channel, msg):
                 print("write timeout")
         else:
             print("Serial is not open")
+
 
 def auton_state_callback(channel, msg):
     state = AutonState.decode(msg)
@@ -34,7 +35,6 @@ def auton_state_callback(channel, msg):
 def main():
     lcm_.subscribe("/AutonState", auton_state_callback)
     UART.setup("UART4")
-    led = LED()
     with serial.Serial(port="/dev/ttyS4", baudrate=baud) as ser:
         ser.close()
         ser.open()
