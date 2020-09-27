@@ -29,11 +29,11 @@ def nav_status_callback(channel, msg):
 def auton_state_callback(channel, msg):
     state = AutonState.decode(msg)
     if(state.is_auton):
-        lcm_.subscribe("/NavStatus", nav_status_callback)
+        lcm_.subscribe("/nav_status", nav_status_callback)
 
 
 def main():
-    lcm_.subscribe("/AutonState", auton_state_callback)
+    lcm_.subscribe("/auton_state", auton_state_callback)
     UART.setup("UART4")
     with serial.Serial(port="/dev/ttyS4", baudrate=baud) as ser:
         ser.close()
