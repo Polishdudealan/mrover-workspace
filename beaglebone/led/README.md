@@ -9,7 +9,7 @@ This program runs on the beaglebone. It interprets the led lcm struct and sends 
 #### LCM Channels
 LED [subscriber]\
 Messages: [AutonState](https://github.com/Polishdudealan/mrover-workspace/blob/led/rover_msgs/AutonState.lcm) "/auton_state"\
-          [NavStatus](https://github.com/Polishdudealan/mrover-workspace/blob/led/rover_msgs/NavStatus.lcm) "nav_status"\
+          [NavStatus](https://github.com/Polishdudealan/mrover-workspace/blob/led/rover_msgs/NavStatus.lcm) "/nav_status"\
 Publishers: Auton Team\
 Subscribers: beaglebone/led
 
