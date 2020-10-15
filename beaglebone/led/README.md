@@ -2,9 +2,9 @@ Code for communicating with the NeoPixel NeoMatrix 8x8 - 64 RGB LED Pixel Matrix
 ===========================================================
 ### About
 This program runs on the beaglebone. It interprets the led lcm struct and sends corresponding commands through UART to an arduino which drives the led board. It sends the following three strings as bytes depending on the command in the lcm struct.
-- "A" if the mode is Autonomous
 - "M" if the mode is Manual
-- "L" if the mode is Leg (once a leg of the autonomous path has been completed)
+- "A" if the mode is Autonomous
+- "D" Once a leg of the auton journey is completed
 
 #### LCM Channels
 LED [subscriber]\
@@ -12,7 +12,6 @@ Messages: [AutonState](https://github.com/Polishdudealan/mrover-workspace/blob/l
           [NavStatus](https://github.com/Polishdudealan/mrover-workspace/blob/led/rover_msgs/NavStatus.lcm) "/nav_status"\
 Publishers: Auton Team\
 Subscribers: beaglebone/led
-
 
 ### Usage
 Required components:\
@@ -32,6 +31,10 @@ SSH into the Beaglebone and open up the terminal. Type\
 
 #### Exceptions
 Currently there is only one exception being looked for, the WriteTimemoutException from the pyserial Write() command. If the exception occurs, an error message will print out to the console.
+
+#### Known Bugs
+If the mode is switched from autonomous back to manual, and then switched back to autonomous again, the "leg completed" led flashing will be doubled.
+Every back and forth switch between the two modes results in a adding another 3 sets of flashes. One fix is to restart the beaglebone led program.
 
 #### ToDo
 - [x] build and test code on Beaglebone.
